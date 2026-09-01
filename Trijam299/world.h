@@ -32,27 +32,27 @@ struct World {
 	}
 
 	void render() {
-		entity **ents = new entity *[entities.size()];
-		entity **top = ents;
+		std::vector<entity *> sortedEnts;
+		sortedEnts.reserve( entities.size() );
 		for ( auto &e : entities )
 		{
-			*top = &*e;
-			top++;
+			sortedEnts.push_back( e.get() );
 		}
 
-		std::stable_sort( ents, ents + entities.size(), []( entity *l, entity *r )
+		std::stable_sort( sortedEnts.begin(), sortedEnts.end(), [](entity *l, entity *r)
 			{
 				return l->zLayer < r->zLayer;
 			});
 
-		for ( int i = 0; i < entities.size(); i++ )
+		for ( entity *e : sortedEnts )
 		{
-			entity *e = ents[i];
 			if (e->removed) continue;
+			rlPushMatrix();
+			rlTranslatef( e->position.x, e->position.y, 0 );
+			rlRotatef( e->rotation, 0, 0, 1 );
 			e->render();
+			rlPopMatrix();
 		}
-
-		delete[] ents;
 	}
 
 	template <class Type, class Fn>

@@ -10,6 +10,8 @@ struct entity {
 	flux::Group tw;
 	bool removed = false;
 	int zLayer = 0;
+	float2 position = 0;
+	float rotation = 0;
 
 	virtual ~entity() {
 		if (!removed) onRemove();

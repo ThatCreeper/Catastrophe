@@ -105,3 +105,33 @@ inline float NonPeriodic( float seed, float ratea, float x )
 }
 
 #define DELTA (GetFrameTime())
+
+#define IM_F_DRAG( f ) ImGui::DragFloat( #f, &f );
+#define IM_F_RO( f ) ImGui::Text( #f " = %f", f );
+#define IM_I_RO( i ) ImGui::Text( #i " = %d", i );
+#define IM_IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
+
+struct float2
+{
+	float x, y;
+
+	inline float2( float v ) : x( v ), y( v ) {}
+	inline float2( float x, float y ) : x( x ), y( y ) {}
+
+	inline float2 operator +( const float2 &o )
+	{
+		return { x + o.x, y + o.y };
+	}
+	inline float2 operator -( const float2 &o )
+	{
+		return { x - o.x, y - o.y };
+	}
+	inline float2 operator *( const float2 &o )
+	{
+		return { x * o.x, y * o.y };
+	}
+	inline float2 operator /( const float2 &o )
+	{
+		return { x / o.x, y / o.y };
+	}
+};
