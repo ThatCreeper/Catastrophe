@@ -76,15 +76,16 @@ namespace TrijamVersion { bool TrijamRunGame(); }
 int main() {
 	LoadGlobState();
 
-	SetConfigFlags(FLAG_VSYNC_HINT);
-	InitWindow(SCRWID, SCRHEI, "Weaken Spot");
+	SetTraceLogLevel( LOG_WARNING );
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+	InitWindow(DEFAULTSCRWID, DEFAULTSCRHEI, "Weaken Spot");
 	
 #ifdef _WINDOWS
 	if ( GetWindowScaleDPI().x == 2 )
 	{
 		CloseWindow();
-		SetConfigFlags( FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI );
-		InitWindow( SCRWID, SCRHEI, "Weaken Spot" );
+		SetConfigFlags( FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE );
+		InitWindow( DEFAULTSCRWID, DEFAULTSCRHEI, "Weaken Spot" );
 	}
 #endif
 	

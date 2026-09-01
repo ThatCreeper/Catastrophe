@@ -20,6 +20,9 @@ World gWorld;
 
 struct State
 {
+	int scrWid = 0;
+	int scrHei = 0;
+
 	void reset()
 	{
 		gTex = {};
@@ -38,8 +41,15 @@ struct State
 	}
 
 	void gui() {
-#define FDRAG( f ) ImGui::DragFloat( #f, &f );
+#define F_DRAG( f ) ImGui::DragFloat( #f, &f );
+#define F_RO( f ) ImGui::Text( #f " = %f", f );
+#define I_RO( i ) ImGui::Text( #i " = %d", i );
+#define IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
 		ImGui::Begin( "State" );
+
+		I_RO( scrWid );
+		I_RO( scrHei );
+
 		ImGui::End();
 	}
 } s;
@@ -51,10 +61,21 @@ bool TrijamRunGame() {
 
 	PlaySound( SND_START );
 
-	RenderTexture2D render = LoadRenderTexture( SCRWID, SCRHEI );
+	s.scrWid = GetScreenWidth();
+	s.scrHei = GetScreenHeight();
+	RenderTexture2D render = LoadRenderTexture( s.scrWid, s.scrHei );
 
 	while ( !WindowShouldClose() )
 	{
+		if ( GetScreenWidth() != s.scrWid || GetScreenHeight() != s.scrHei )
+		{
+			s.scrWid = GetScreenWidth();
+			s.scrHei = GetScreenHeight();
+
+			UnloadRenderTexture( render );
+			render = LoadRenderTexture( s.scrWid, s.scrHei );
+		}
+
 		// flux::update(GetFrameTime());
 		gFlux.update( DELTA );
 
@@ -76,7 +97,7 @@ bool TrijamRunGame() {
 		//BeginShaderMode(s.s.blur);
 		//SetShaderValueTexture(s.s.blur, s.s.uniform_blur_lut, s.t.baselut);
 
-		DrawTexturePro( render.texture, { 0, 0, SCRWID, -SCRHEI }, { 0, 0, SCRWID, SCRHEI }, { 0, 0 }, 0, WHITE );
+		DrawTexturePro( render.texture, { 0, 0, (float)s.scrWid, -(float)s.scrHei }, { 0, 0, (float)s.scrWid, (float)s.scrHei }, { 0, 0 }, 0, WHITE );
 
 		//EndShaderMode();
 
@@ -89,13 +110,12 @@ bool TrijamRunGame() {
 		s.gui();
 #endif
 
-		DoFadeInAnimation( fadein );
-
 		rlImGuiEnd();
 		EndDrawing();
 	}
 
 END:
+	UnloadRenderTexture( render );
 	SaveGlobState();
 	s.close();
 
