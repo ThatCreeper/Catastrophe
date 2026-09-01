@@ -66,13 +66,22 @@ inline float Dist(float x, float y) {
 	return sqrtf(x * x + y * y);
 }
 
-inline float Lerp(float from, float to, float x, float max) {
+inline float LerpUnclamped(float from, float to, float x, float max) {
 	float t = x / max;
 	return from + (to - from) * t;
 }
 
+inline float LerpUnclamped( float from, float to, float x ) {
+	return from + ( to - from ) * x;
+}
+
+inline float Lerp( float from, float to, float x )
+{
+	return LerpUnclamped( from, to, Clamp( x ) );
+}
+
 inline float LerpDistRound(float from, float to, float x, float max, float dist) {
-	float l = Lerp(from, to, x, max);
+	float l = LerpUnclamped(from, to, x, max);
 	if (abs(l - to) < dist)
 		return to;
 	return l;
@@ -119,20 +128,34 @@ struct float2
 	inline float2( float v ) : x( v ), y( v ) {}
 	inline float2( float x, float y ) : x( x ), y( y ) {}
 
-	inline float2 operator +( const float2 &o )
+	inline float2 operator +( const float2 &o ) const
 	{
 		return { x + o.x, y + o.y };
 	}
-	inline float2 operator -( const float2 &o )
+	inline float2 operator -( const float2 &o ) const
 	{
 		return { x - o.x, y - o.y };
 	}
-	inline float2 operator *( const float2 &o )
+	inline float2 operator *( const float2 &o ) const
 	{
 		return { x * o.x, y * o.y };
 	}
-	inline float2 operator /( const float2 &o )
+	inline float2 operator /( const float2 &o ) const
 	{
 		return { x / o.x, y / o.y };
+	}
+
+	inline float2 lerp( float2 other, float t ) const
+	{
+		return { Lerp( x, other.x, t ), Lerp( y, other.y, t ) };
+	}
+
+	inline float2 round() const
+	{
+		return { roundf( x ), roundf( y ) };
+	}
+	inline float2 floor() const
+	{
+		return { floorf( x ), floorf( y ) };
 	}
 };

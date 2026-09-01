@@ -11,3 +11,9 @@ void DrawKeybindBar(const char *left, const char *right, bool bg) {
 	int rlen = MeasureText(right, 20);
 	DrawText(right, SCRWID - 10 - rlen, SCRHEI - 25, 20, WHITE);
 }
+
+void DrawCrosshair( float x, float y, float size )
+{
+	DrawLine( x - size, y, x + size, y, RED );
+	DrawLine( x, y - size, x, y + size, GREEN );
+}
