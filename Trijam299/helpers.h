@@ -106,10 +106,11 @@ inline float NonPeriodic( float seed, float ratea, float x )
 
 #define DELTA (GetFrameTime())
 
-#define IM_F_DRAG( f ) ImGui::DragFloat( #f, &f );
-#define IM_F_RO( f ) ImGui::Text( #f " = %f", f );
-#define IM_I_RO( i ) ImGui::Text( #i " = %d", i );
-#define IM_IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
+#define UIM_F_DRAG( f ) ImGui::DragFloat( #f, &f );
+#define UIM_F_RO( f ) ImGui::Text( #f " = %f", f );
+#define UIM_I_RO( i ) ImGui::Text( #i " = %d", i );
+#define UIM_IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
+#define UIM_F2_DRAG( v ) ImGui::DragFloat2( #v, &v.x );
 
 struct float2
 {

@@ -41,29 +41,51 @@ struct State
 	}
 
 	void gui() {
-#define F_DRAG( f ) ImGui::DragFloat( #f, &f );
-#define F_RO( f ) ImGui::Text( #f " = %f", f );
-#define I_RO( i ) ImGui::Text( #i " = %d", i );
-#define IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
 		ImGui::Begin( "State" );
 
-		I_RO( scrWid );
-		I_RO( scrHei );
+		UIM_I_RO( GetFPS() );
+		UIM_F_RO( DELTA );
+
+		UIM_I_RO( scrWid );
+		UIM_I_RO( scrHei );
 
 		ImGui::End();
 	}
 } s;
+
+struct Player : entity
+{
+	DEFINE_ENT( Player );
+
+	void update() override
+	{
+		if ( IsKeyDown( KEY_LEFT ) )
+			position.x -= DELTA * 100;
+		if ( IsKeyDown( KEY_RIGHT ) )
+			position.x += DELTA * 100;
+	}
+
+	void render() override
+	{
+		DrawRectangle( -8, -8, 16, 16, YELLOW );
+	}
+
+	void gui() override
+	{
+		entity::gui();
+	}
+};
 
 bool TrijamRunGame() {
 	int fadein = 0;
 	bool restart = false;
 	s.reset();
 
-	PlaySound( SND_START );
-
 	s.scrWid = GetScreenWidth();
 	s.scrHei = GetScreenHeight();
 	RenderTexture2D render = LoadRenderTexture( s.scrWid, s.scrHei );
+
+	gWorld.add( new Player() );
 
 	while ( !WindowShouldClose() )
 	{
@@ -83,7 +105,7 @@ bool TrijamRunGame() {
 
 		BeginTextureMode( render );
 
-		ClearBackground( BLACK );
+		ClearBackground( DARKGRAY );
 
 		gWorld.render();
 
@@ -91,8 +113,6 @@ bool TrijamRunGame() {
 
 		BeginDrawing();
 		rlImGuiBegin();
-
-		ClearBackground( BLACK );
 
 		//BeginShaderMode(s.s.blur);
 		//SetShaderValueTexture(s.s.blur, s.s.uniform_blur_lut, s.t.baselut);
@@ -105,7 +125,7 @@ bool TrijamRunGame() {
 		gTex.Gui();
 		gShd.Gui();
 		ImGui::Begin( "Entities" );
-		gWorld.forEach<entity>( []( entity *e ) { e->gui(); } );
+		gWorld.forEach<entity>( []( entity *e ) { e->trueGui(); } );
 		ImGui::End();
 		s.gui();
 #endif

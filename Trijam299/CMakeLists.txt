@@ -5,6 +5,7 @@ target_include_directories( Trijam299 PRIVATE . )
 
 target_sources( Trijam299
 	PRIVATE
+		cpp.hint
 		entity.h
 		global.h
 		globstate.cpp

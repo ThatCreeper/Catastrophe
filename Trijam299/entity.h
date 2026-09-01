@@ -25,13 +25,17 @@ struct entity {
 		tw.update(GetFrameTime());
 	}
 
-	virtual void gui() {}
+	virtual void gui()
+	{
+		UIM_F2_DRAG( position );
+		UIM_F_DRAG( rotation );
+	}
 
 	virtual void render() {}
 
 	virtual void onRemove() {}
 
-	virtual bool trueGui() = 0;
+	virtual void trueGui() = 0;
 
 	inline bool baseGuiHeader(const char *name) {
 		const char *processed = TextFormat("%s %d##%d", name, ((int)(intptr_t)this) & 0x1FF, ((int)(intptr_t)this));
@@ -43,9 +47,9 @@ struct entity {
 #define ENT_GUI_END() ImGui::TreePop()
 #define DEFINE_ENT( name ) \
 	public: \
-	inline bool trueGui() override \
+	inline void trueGui() override \
 	{ \
-		if ( !baseGuiHeader( name ) ) return; \
+		if ( !baseGuiHeader( #name ) ) return; \
 		this->gui(); \
 		ImGui::TreePop(); \
 	}
