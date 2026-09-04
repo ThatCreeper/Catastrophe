@@ -97,7 +97,6 @@ struct Camera : entity
 #define ENABLE_POSTPROCESS 0
 
 bool TrijamRunGame() {
-	int fadein = 0;
 	bool restart = false;
 	s.reset();
 

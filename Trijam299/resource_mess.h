@@ -1,3 +1,4 @@
+#pragma once
 
 #define S(a) T(a, #a ".png")
 #define TEXTURES \
@@ -94,7 +95,7 @@ struct Shaders
 		ImGui::Begin( "Shaders" );
 		ImGui::BeginGroup();
 
-#define T(a, b, c) if (ImGui::Button("Reload " #a)) { Shader s = LoadShader(b, c); if (s.id) { UnloadShader(a); a = s; LoadUniforms(); } }
+#define T(a, b, c) if (ImGui::Button( "Reload " #a )) { Shader s = LoadShader(b, c); if (s.id) { UnloadShader(a); a = s; LoadUniforms(); } }
 		SHADERS;
 #undef T
 

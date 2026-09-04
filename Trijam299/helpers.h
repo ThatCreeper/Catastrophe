@@ -83,7 +83,7 @@ inline float Lerp( float from, float to, float x )
 
 inline float LerpDistRound(float from, float to, float x, float max, float dist) {
 	float l = LerpUnclamped(from, to, x, max);
-	if (abs(l - to) < dist)
+	if (std::abs(l - to) < dist)
 		return to;
 	return l;
 }
