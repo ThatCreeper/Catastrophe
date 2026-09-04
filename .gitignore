@@ -377,3 +377,8 @@ run/**/*.bank
 
 # ImGui
 run/imgui.ini
+
+# KDevelop
+.kdev4/
+build/
+**/*.kdev4

@@ -1,4 +1,5 @@
 #include "flux.h"
+#include <cmath>
 
 static flux::Group globalGroup{};
 
@@ -19,8 +20,9 @@ static float GetEasedValue(flux::Easing easing, float value) {
 		return value * value;
 	case flux::EASE_QUARTOUT:
 		return 1 - powf(1 - value, 4);
+	default:
+		throw; // See comment at top of function.
 	}
-	throw; // See comment at top of function.
 }
 
 // NOTE: cadenr 8/27/2026 HIDDEN. PROBABLY NOT GOOD TO USE.

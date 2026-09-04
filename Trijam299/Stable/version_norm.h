@@ -2,28 +2,9 @@
 
 #include <cassert>
 
-inline R RRead(const char *fname) {
-	R r;
-	r.reading = true;
-#ifndef PLATFORM_WEB
-	fopen_s(&r.file, fname, "r");
-#endif
-	return r;
-}
-
-inline R RWrite(const char *fname) {
-	R r;
-	r.reading = false;
-#ifndef PLATFORM_WEB
-	fopen_s(&r.file, fname, "w");
-#endif
-	return r;
-}
-
-inline void RClose(R &r) {
-	if (r.file)
-		fclose(r.file);
-}
+R RRead(const char *fname);
+R RWrite(const char *fname);
+void RClose(R &r);
 
 #define SERIALIZE(r, field) Serialize(r, field)
 
@@ -41,14 +22,7 @@ inline void RClose(R &r) {
 		SERIALIZE(r, field); \
 	}
 
-inline void SerializeBinary(R & r, void *x, size_t s) {
-	if (r.IsReading()) {
-		fread(x, s, 1, r.file);
-	}
-	else {
-		fwrite(x, s, 1, r.file);
-	}
-}
+void SerializeBinary(R & r, void *x, size_t s);
 #define SER_BIN(type, fmt) inline void Serialize(R &r, type &s) { SerializeBinary(r, &s, sizeof(s)); }
 
 #define SER_CHECK \

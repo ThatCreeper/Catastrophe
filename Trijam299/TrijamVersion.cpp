@@ -157,7 +157,7 @@ bool TrijamRunGame() {
 
 		rlImGuiBegin();
 
-#if _DEBUG
+#ifndef NDEBUG
 		gTex.Gui();
 		gShd.Gui();
 		ImGui::Begin( "Entities" );

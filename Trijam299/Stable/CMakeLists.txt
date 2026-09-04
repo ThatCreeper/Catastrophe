@@ -11,5 +11,6 @@ target_sources( Trijam299
 		sound.h
 		version.h
 		version_debug.h
+		version_norm.cpp
 		version_norm.h
 )

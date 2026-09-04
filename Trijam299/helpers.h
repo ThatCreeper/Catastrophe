@@ -1,3 +1,4 @@
+#include <string_view>
 #pragma once
 
 inline int Overflow(int x, int min, int max) {
