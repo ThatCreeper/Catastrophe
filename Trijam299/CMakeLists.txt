@@ -14,4 +14,6 @@ target_sources( Trijam299
 		resource_mess.h
 		TrijamVersion.cpp
 		Trijam291.cpp
+		world.cpp
+		world.h
 )

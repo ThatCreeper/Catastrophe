@@ -12,6 +12,9 @@ else()
 	set_property( TARGET Trijam299 PROPERTY SUFFIX ".out" )
 endif()
 
+add_subdirectory( box3d )
+target_link_libraries( Trijam299 box3d )
+
 set_property( TARGET Trijam299 PROPERTY CXX_STANDARD 23 )
 set_property( TARGET Trijam299 PROPERTY DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run" )
 set_property( TARGET Trijam299 PROPERTY CMAKE_CXX_SCAN_FOR_MODULES OFF )

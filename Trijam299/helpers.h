@@ -1,5 +1,8 @@
-#include <string_view>
 #pragma once
+
+#include <string_view>
+#include <cmath>
+#include <cstdint>
 
 inline int Overflow(int x, int min, int max) {
 	if (x < min)
@@ -153,10 +156,10 @@ struct float2
 
 	inline float2 round() const
 	{
-		return { roundf( x ), roundf( y ) };
+		return { std::round( x ), std::round( y ) };
 	}
 	inline float2 floor() const
 	{
-		return { floorf( x ), floorf( y ) };
+		return { std::floor( x ), std::floor( y ) };
 	}
 };

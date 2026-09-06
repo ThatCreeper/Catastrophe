@@ -3,8 +3,7 @@
 #include "flux.h"
 #include "raylib.h"
 #include "imgui.h"
-
-struct entity;
+#include "helpers.h"
 
 struct entity {
 	flux::Group tw;
