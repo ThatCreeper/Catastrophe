@@ -61,7 +61,7 @@ struct State
 
 struct Player : entity
 {
-	DEFINE_ENT( Player );
+	DEFINE_ENT( Player, entity );
 
 	void update() override
 	{
@@ -78,19 +78,19 @@ struct Player : entity
 
 	void gui() override
 	{
-		entity::gui();
+		base::gui();
 	}
 };
 
 struct Camera : entity
 {
-	DEFINE_ENT( Camera );
+	DEFINE_ENT( Camera, entity );
 
 	void update() override
 	{
 		position = position.lerp( s.localPlayer->position, DELTA * 10 );
 
-		s.camPos = position.round();
+		s.camPos = position;
 	}
 };
 
@@ -134,8 +134,9 @@ bool TrijamRunGame() {
 #endif
 		ClearBackground( DARKGRAY );
 		rlPushMatrix();
-		rlTranslatef( s.scrWid / 2.f - s.camPos.x, s.scrHei / 2.f - s.camPos.y, 0 );
+		rlTranslatef( s.scrWid / 2.f, s.scrHei / 2.f, 0 );
 		rlScalef( s.camScale, s.camScale, 1 );
+		rlTranslatef(-s.camPos.x, -s.camPos.y, 0);
 
 		DrawCrosshair( 0, 0, 16 );
 		gWorld.render();

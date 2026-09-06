@@ -44,8 +44,10 @@ struct entity {
 
 #define ENT_GUI_BEGIN( name ) if ( !guiHeader( name ) ) return
 #define ENT_GUI_END() ImGui::TreePop()
-#define DEFINE_ENT( name ) \
+#define DEFINE_ENT( name, baseClass ) \
 	public: \
+	\
+	using base = baseClass; \
 	inline void trueGui() override \
 	{ \
 		if ( !baseGuiHeader( #name ) ) return; \
