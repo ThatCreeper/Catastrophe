@@ -1,5 +1,6 @@
 #include "flux.h"
 #include <cmath>
+#include "standard.h"
 
 static flux::Group globalGroup{};
 
@@ -21,7 +22,8 @@ static float GetEasedValue(flux::Easing easing, float value) {
 	case flux::EASE_QUARTOUT:
 		return 1 - powf(1 - value, 4);
 	default:
-		throw; // See comment at top of function.
+		TRIGGER_DEBUGGER;
+		return 1; // See comment at top of function.
 	}
 }
 
@@ -99,7 +101,7 @@ flux::TweenPtr flux::Tween::oncomplete(std::function<void()> fn)
 flux::TweenPtr flux::Tween::after(float duration)
 {
 	if (group_ == nullptr)
-		throw;
+		return nullptr;
 	return after(duration, *group_);
 }
 

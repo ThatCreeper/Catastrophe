@@ -10,6 +10,7 @@ target_sources( Trijam299
 		gfx.h
 		sound.cpp
 		sound.h
+		standard.h
 		version.h
 		#version_debug.h
 		version_norm.cpp
