@@ -23,7 +23,8 @@ struct State
 {
 	int scrWid = 0;
 	int scrHei = 0;
-	float2 camPos = 0;
+	float3 camPos = 0;
+	float3 camRot = 0;
 	float camScale = 1;
 	Player *localPlayer;
 
@@ -52,7 +53,8 @@ struct State
 
 		UIM_I_RO( scrWid );
 		UIM_I_RO( scrHei );
-		UIM_F2_DRAG( camPos );
+		UIM_F3_DRAG( camPos );
+		UIM_F3_DRAG(camRot);
 		UIM_F_DRAG( camScale );
 
 		ImGui::End();
@@ -65,10 +67,29 @@ struct Player : entity
 
 	void update() override
 	{
-		if ( IsKeyDown( KEY_LEFT ) )
-			position.x -= DELTA * 100;
-		if ( IsKeyDown( KEY_RIGHT ) )
-			position.x += DELTA * 100;
+		if ( IsKeyDown( KEY_W ) )
+			position.z -= DELTA * 20;
+		if ( IsKeyDown( KEY_S ) )
+			position.z += DELTA * 20;
+		if ( IsKeyDown( KEY_A ) )
+			position.x -= DELTA * 20;
+		if ( IsKeyDown( KEY_D ) )
+			position.x += DELTA * 20;
+		if ( IsKeyDown( KEY_Q ) )
+			position.y -= DELTA * 20;
+		if ( IsKeyDown( KEY_E ) )
+			position.y += DELTA * 20;
+
+		if (IsKeyDown(KEY_LEFT))
+			s.camRot.y -= DELTA * 50;
+		if (IsKeyDown(KEY_RIGHT))
+			s.camRot.y += DELTA * 50;
+		if (IsKeyDown(KEY_UP))
+			s.camRot.x -= DELTA * 50;
+		if (IsKeyDown(KEY_DOWN))
+			s.camRot.x += DELTA * 50;
+
+		s.camPos = position;
 	}
 
 	void render() override
@@ -82,19 +103,22 @@ struct Player : entity
 	}
 };
 
-struct Camera : entity
+struct Spot : entity
 {
-	DEFINE_ENT( Camera, entity );
+	DEFINE_ENT(Spot, entity);
 
 	void update() override
 	{
-		position = position.lerp( s.localPlayer->position, DELTA * 10 );
+		rotation.y += DELTA * 360;
+	}
 
-		s.camPos = position;
+	void render() override
+	{
+		DrawTexture(gTex.spot, 0, 0, WHITE);
 	}
 };
 
-#define ENABLE_POSTPROCESS 0
+#define ENABLE_POSTPROCESS 1
 
 bool TrijamRunGame() {
 	bool restart = false;
@@ -107,7 +131,7 @@ bool TrijamRunGame() {
 #endif
 
 	gWorld.add( s.localPlayer = new Player() );
-	gWorld.add( new Camera );
+	gWorld.add(new Spot);
 
 	while ( !WindowShouldClose() )
 	{
@@ -133,15 +157,26 @@ bool TrijamRunGame() {
 		BeginDrawing();
 #endif
 		ClearBackground( DARKGRAY );
+		Camera3D cam = {
+			.position = { 0, 0, 0 },
+			.target = { 0, 0, -1 },
+			.up = { 0, 1, 0 },
+			.fovy = 75,
+			.projection = CAMERA_PERSPECTIVE,
+		};
+		BeginMode3D(cam);
 		rlPushMatrix();
-		rlTranslatef( s.scrWid / 2.f, s.scrHei / 2.f, 0 );
-		rlScalef( s.camScale, s.camScale, 1 );
-		rlTranslatef(-s.camPos.x, -s.camPos.y, 0);
+		rlRotatef(s.camRot.x, 1, 0, 0);
+		rlRotatef(s.camRot.y, 0, 1, 0);
+		rlRotatef(s.camRot.z, 0, 0, 1);
+		rlTranslatef(-s.camPos.x, -s.camPos.y, -s.camPos.z);
 
-		DrawCrosshair( 0, 0, 16 );
+		DrawCrosshair3D( 0, 0, 0, 1 );
 		gWorld.render();
 
 		rlPopMatrix();
+		EndMode3D();
+
 #if ENABLE_POSTPROCESS
 		EndTextureMode();
 

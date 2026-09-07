@@ -9,8 +9,8 @@ struct entity {
 	flux::Group tw;
 	bool removed = false;
 	int zLayer = 0;
-	float2 position = 0;
-	float rotation = 0;
+	float3 position = 0;
+	float3 rotation = 0;
 
 	virtual ~entity() {
 		if (!removed) onRemove();
@@ -26,8 +26,8 @@ struct entity {
 
 	virtual void gui()
 	{
-		UIM_F2_DRAG( position );
-		UIM_F_DRAG( rotation );
+		UIM_F3_DRAG( position );
+		UIM_F3_DRAG( rotation );
 	}
 
 	virtual void render() {}

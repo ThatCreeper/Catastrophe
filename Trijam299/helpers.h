@@ -124,7 +124,8 @@ inline float NonPeriodic( float seed, float ratea, float x )
 #define UIM_F_RO( f ) ImGui::Text( #f " = %f", f );
 #define UIM_I_RO( i ) ImGui::Text( #i " = %d", i );
 #define UIM_IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
-#define UIM_F2_DRAG( v ) ImGui::DragFloat2( #v, &v.x );
+#define UIM_F2_DRAG( v ) ImGui::DragFloat2( #v, &v.x, 0.1f );
+#define UIM_F3_DRAG( v ) ImGui::DragFloat3( #v, &v.x, 0.1f );
 
 struct float2
 {
@@ -162,5 +163,44 @@ struct float2
 	inline float2 floor() const
 	{
 		return { std::floor( x ), std::floor( y ) };
+	}
+};
+
+struct float3
+{
+	float x, y, z;
+
+	inline float3( float v ) : x( v ), y( v ), z( v ) {}
+	inline float3( float x, float y, float z ) : x( x ), y( y ), z( z ) {}
+
+	inline float3 operator +( const float3 &o ) const
+	{
+		return { x + o.x, y + o.y, z + o.z };
+	}
+	inline float3 operator -( const float3 &o ) const
+	{
+		return { x - o.x, y - o.y, z - o.z };
+	}
+	inline float3 operator *( const float3 &o ) const
+	{
+		return { x * o.x, y * o.y, z * o.z };
+	}
+	inline float3 operator /( const float3 &o ) const
+	{
+		return { x / o.x, y / o.y, z / o.z };
+	}
+
+	inline float3 lerp( float3 other, float t ) const
+	{
+		return { Lerp( x, other.x, t ), Lerp( y, other.y, t ), Lerp( z, other.z, t ) };
+	}
+
+	inline float3 round() const
+	{
+		return { std::round( x ), std::round( y ), std::round( z ) };
+	}
+	inline float3 floor() const
+	{
+		return { std::floor( x ), std::floor( y ), std::floor( z ) };
 	}
 };

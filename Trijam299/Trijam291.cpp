@@ -11,14 +11,14 @@ int main() {
 	LoadGlobState();
 
 	SetTraceLogLevel( LOG_WARNING );
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE /*| FLAG_MSAA_4X_HINT*/);
 	InitWindow(DEFAULTSCRWID, DEFAULTSCRHEI, "Weaken Spot");
 	
 #ifdef _WINDOWS
 	if ( GetWindowScaleDPI().x == 2 )
 	{
 		CloseWindow();
-		SetConfigFlags( FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT );
+		SetConfigFlags( FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE /*| FLAG_MSAA_4X_HINT*/ );
 		InitWindow( DEFAULTSCRWID, DEFAULTSCRHEI, "Weaken Spot" );
 	}
 #endif

@@ -17,3 +17,10 @@ void DrawCrosshair( float x, float y, float size )
 	DrawLine( x - size, y, x + size, y, RED );
 	DrawLine( x, y - size, x, y + size, GREEN );
 }
+
+void DrawCrosshair3D( float x, float y, float z, float size )
+{
+	DrawLine3D({ x - size, y, z }, { x + size, y, z }, RED);
+	DrawLine3D({ x, y - size, z }, { x, y + size, z }, GREEN);
+	DrawLine3D({ x, y, z - size }, { x, y, z + size }, BLUE);
+}

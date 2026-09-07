@@ -47,8 +47,10 @@ void World::render()
 		{
 			if (e->removed) continue;
 			rlPushMatrix();
-			rlTranslatef( e->position.x, e->position.y, 0 );
-			rlRotatef( e->rotation, 0, 0, 1 );
+			rlTranslatef( e->position.x, e->position.y, e->position.z );
+			rlRotatef( e->rotation.x, 1, 0, 0 );
+			rlRotatef( e->rotation.y, 0, 1, 0 );
+			rlRotatef( e->rotation.z, 0, 0, 1 );
 			e->render();
 			rlPopMatrix();
 		}
