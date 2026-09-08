@@ -94,7 +94,7 @@ inline float LerpDistRound(float from, float to, float x, float max, float dist)
 
 // X from 0 to 1
 inline float SInterp(float x) {
-	return (1 - cosf(PI * x)) / 2;
+	return (1 - cosf(std::numbers::pi_v<float> * x)) / 2;
 }
 
 inline float SInterp(float x, float max) {
@@ -110,8 +110,9 @@ inline float NonPeriodic( float seed, float ratea, float x )
 {
 	float starta = std::hash<float>()( seed );
 	float startb = std::hash<float>()( seed + 1 );
+	float pi = std::numbers::pi_v<float>;
 	
-	float raw = sinf( starta + ratea * x * 5 ) + sinf( startb + ratea * PI * 2 );
+	float raw = sinf( starta + ratea * x * 5 ) + sinf( startb + ratea * pi * 2 );
 
 	float normalized = ( raw / 4 ) + 0.5f;
 
@@ -119,6 +120,7 @@ inline float NonPeriodic( float seed, float ratea, float x )
 }
 
 #define DELTA (GetFrameTime())
+#define GetKeyAxis(KeyNeg, KeyPos) (IsKeyDown(KeyPos) - IsKeyDown(KeyNeg))
 
 #define UIM_F_DRAG( f ) ImGui::DragFloat( #f, &f );
 #define UIM_F_RO( f ) ImGui::Text( #f " = %f", f );

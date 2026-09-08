@@ -1,5 +1,8 @@
 #pragma once
 
+extern struct Textures gTex;
+extern struct Shaders gShd;
+
 #define S(a) T(a, #a ".png")
 #define TEXTURES \
 	T(frozen, "frozen.png") \
@@ -19,13 +22,21 @@
 	S(spotroom) \
 	S(hitler) \
 	S(baby)
+
+#define SHADERS \
+	T(blur, nullptr, "blur.fs")
+#define UNIFORMS \
+	U(blur, lut, "lut")
+
+
+
 struct Textures
 {
 #define T(a, b) Texture2D a;
 	TEXTURES
 #undef T
 
-		void Load()
+	void Load()
 	{
 #define T(a, b) a = LoadTexture(b);
 		TEXTURES
@@ -48,17 +59,12 @@ struct Textures
 		TEXTURES
 #undef T
 
-			ImGui::EndGroup();
+		ImGui::EndGroup();
 		ImGui::End();
 	}
 };
 #undef S
-#undef TEXTURES
 
-#define SHADERS \
-	T(blur, nullptr, "blur.fs")
-#define UNIFORMS \
-	U(blur, lut, "lut")
 struct Shaders
 {
 #define T(a, b, c) Shader a;
@@ -103,5 +109,3 @@ struct Shaders
 		ImGui::End();
 	}
 };
-#undef SHADERS
-#undef UNIFORMS
