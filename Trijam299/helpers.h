@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdint>
 #include <standard.h>
+#include <numbers>
 
 inline int Overflow(int x, int min, int max) {
 	if (x < min)
