@@ -4,29 +4,28 @@
 void World::add(entity* e)
 {
 	entities.emplace_back(e);
-	e->spawnRenderer();
-	e->init();
+	e->OnSpawn();
 }
 
 void World::remove(entity* e)
 {
-	e->onRemove();
-	e->removed = true;
+	e->OnRemove();
+	e->mRemoved = true;
 }
 
 void World::clear()
 {
-	for (auto &e : entities) e->onRemove();
+	for (auto &e : entities) e->OnRemove();
 	entities.clear();
 }
 
 void World::update()
 {
 	for (auto &e : entities) {
-		if (e->removed) continue;
+		if (e->mRemoved) continue;
 		e->update();
 	}
-	std::erase_if(entities, [](const auto &e) { return e->removed; });
+	std::erase_if(entities, [](const auto &e) { return e->mRemoved; });
 }
 
 void World::render()
@@ -45,7 +44,7 @@ void World::render()
 
 		for ( entity *e : sortedEnts )
 		{
-			if (e->removed) continue;
+			if (e->mRemoved) continue;
 			rlPushMatrix();
 			rlTranslatef( e->position.x, e->position.y, e->position.z );
 			rlRotatef( e->rotation.x, 1, 0, 0 );

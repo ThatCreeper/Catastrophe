@@ -7,32 +7,27 @@
 
 struct entity {
 	flux::Group tw;
-	bool removed = false;
+	bool mRemoved = false;
 	int zLayer = 0;
 	float3 position = 0;
 	float3 rotation = 0;
 
 	virtual ~entity() {
-		if (!removed) onRemove();
+		if (!mRemoved) OnRemove();
 	};
 	entity() {}
 
-	virtual void spawnRenderer() {}
-	virtual void init() {}
+	virtual void OnSpawn() {}
+	virtual void OnRemove() {}
 
 	virtual void update() {
 		tw.update(GetFrameTime());
 	}
-
-	virtual void gui()
-	{
+	virtual void render() {}
+	virtual void gui() {
 		UIM_F3_DRAG( position );
 		UIM_F3_DRAG( rotation );
 	}
-
-	virtual void render() {}
-
-	virtual void onRemove() {}
 
 	virtual void trueGui() = 0;
 

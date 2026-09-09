@@ -9,6 +9,7 @@ struct World {
 	std::list<std::unique_ptr<entity>> entities;
 
 	// Entity should be added with `new` and should not be deleted
+	// Example: s.world.add(new Entity());
 	void add(entity *e);
 	void remove(entity *e);
 	void clear();
@@ -19,11 +20,9 @@ struct World {
 	template <class Type, class Fn>
 	void forEach(Fn fn) {
 		for (auto &e : entities) {
-			if constexpr (std::is_same_v<Type, entity>)
-			{
+			if constexpr (std::is_same_v<Type, entity>) {
 				fn(&*e);
-			}
-			else {
+			} else {
 				Type* casted = dynamic_cast<Type*>(&*e);
 				if (casted) fn(casted);
 			}
