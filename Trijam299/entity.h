@@ -5,12 +5,14 @@
 #include "imgui.h"
 #include "helpers.h"
 
+struct World;
 struct entity {
 	flux::Group tw;
 	bool mRemoved = false;
-	int zLayer = 0;
+	// int zLayer = 0;
 	float3 position = 0;
 	float3 rotation = 0;
+	World *mWorld = nullptr;
 
 	virtual ~entity() {
 		if (!mRemoved) OnRemove();

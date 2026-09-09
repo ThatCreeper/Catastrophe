@@ -1,15 +1,16 @@
 #include "Player.h"
 #include <GameState.h>
 #include <box3d/box3d.h>
+#include <box3dhelper.h>
 
 void Player::OnSpawn() {
 	b3WorldDef worldDef = b3DefaultWorldDef();
-	mWorld = b3CreateWorld(&worldDef);
+	mPhysWorld = b3CreateWorld(&worldDef);
 
 	b3BodyDef groundDef = b3DefaultBodyDef();
 	groundDef.type = b3_staticBody;
-	groundDef.position = b3Vec3(0, -20, 0);
-	b3BodyId groundBody = b3CreateBody(mWorld, &groundDef);
+	groundDef.position = b3Vec3(0, -10, 0);
+	b3BodyId groundBody = b3CreateBody(mPhysWorld, &groundDef);
 
 	b3BoxHull groundBox = b3MakeBoxHull(50, 10, 50);
 	b3ShapeDef groundShapeDef = b3DefaultShapeDef();
@@ -21,7 +22,11 @@ void Player::OnSpawn() {
 	b3BodyDef playerBodyDef = b3DefaultBodyDef();
 	playerBodyDef.type = b3_dynamicBody;
 	playerBodyDef.position = b3Vec3(0, 10, 10);
-	mPlayerBody = b3CreateBody(mWorld, &playerBodyDef);
+	playerBodyDef.motionLocks = b3MotionLocks {
+		.angularX = true,
+		.angularZ = true
+	};
+	mPlayerBody = b3CreateBody(mPhysWorld, &playerBodyDef);
 
 	b3BoxHull playerBodyBox = b3MakeBoxHull(1, 1, 1);
 	b3ShapeDef playerBodyBoxDef = b3DefaultShapeDef();
@@ -29,27 +34,36 @@ void Player::OnSpawn() {
 }
 
 void Player::OnRemove() {
-	b3DestroyWorld(mWorld);
+	b3DestroyWorld(mPhysWorld);
 }
 
 void Player::update() {
-	b3World_Step(mWorld, DELTA, 4);
+	b3World_Step(mPhysWorld, DELTA, 4);
 
+	float axisForward  = GetKeyAxis(KEY_W, KEY_S) * 20;
+	float axisSideways = GetKeyAxis(KEY_A, KEY_D) * 20;
 	// position.z += GetKeyAxis (KEY_W, KEY_S) * DELTA * 20;
 	// position.x += GetKeyAxis (KEY_A, KEY_D) * DELTA * 20;
 	// position.y += GetKeyAxis (KEY_Q, KEY_E) * DELTA * 20;
 
-	b3Vec3 physPos = b3Body_GetPosition(mPlayerBody);
-	position = float3(physPos.x, physPos.y, physPos.z);
+	b3Vec3 velocity = b3Body_GetLinearVelocity(mPlayerBody);
+	velocity.x = axisSideways * cos(s.camRot.y * DEG2RAD) - axisForward * sin(s.camRot.y * DEG2RAD);
+	velocity.y -= 10 * DELTA;
+	velocity.z = axisForward * cos(s.camRot.y * DEG2RAD) + axisSideways * sin(s.camRot.y * DEG2RAD);
 
-	s.camRot.y += GetKeyAxis (KEY_LEFT, KEY_RIGHT) * DELTA * 50;
-	s.camRot.x += GetKeyAxis (KEY_UP, KEY_DOWN) * DELTA * 50;
+	b3Body_SetLinearVelocity(mPlayerBody, velocity);
+	b3Body_SetAwake(mPlayerBody, true);
+
+	position = b3ToFloat3(b3Body_GetPosition(mPlayerBody));
+
+	s.camRot.y += GetKeyAxis(KEY_LEFT, KEY_RIGHT) * DELTA * 50;
+	s.camRot.x += GetKeyAxis(KEY_UP, KEY_DOWN) * DELTA * 50;
 
 	s.camPos = position;
 }
 
 void Player::render() {
-	DrawRectangle (-8, -8, 16, 16, YELLOW);
+	DrawCubeWires({ 0, 0, 0 }, 1, 1, 1, RED);
 }
 
 void Player::gui() {

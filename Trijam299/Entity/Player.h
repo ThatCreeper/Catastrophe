@@ -6,8 +6,8 @@
 struct Player : entity {
 	DEFINE_ENT( Player, entity );
 
-	b3WorldId mWorld;
-	b3BodyId mPlayerBody;
+	b3WorldId mPhysWorld = {};
+	b3BodyId mPlayerBody = {};
 
 	void OnSpawn() override;
 	void OnRemove() override;
