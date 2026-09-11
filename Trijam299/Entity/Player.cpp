@@ -14,7 +14,7 @@ void Player::OnSpawn() {
 
 	b3BoxHull groundBox = b3MakeBoxHull(50, 10, 50);
 	b3ShapeDef groundShapeDef = b3DefaultShapeDef();
-	groundShapeDef.baseMaterial.restitution = 0.9f;
+	//groundShapeDef.baseMaterial.restitution = 0.9f;
 	b3CreateHullShape(groundBody, &groundShapeDef, &groundBox.base);
 
 
@@ -47,9 +47,17 @@ void Player::update() {
 	// position.y += GetKeyAxis (KEY_Q, KEY_E) * DELTA * 20;
 
 	b3Vec3 velocity = b3Body_GetLinearVelocity(mPlayerBody);
+	// TODO: Doesn't actually make any sense.
+	bool isOnGround = FloatRoughlyEquals(velocity.y, 0, 0.05);
+
 	velocity.x = axisSideways * cos(s.camRot.y * DEG2RAD) - axisForward * sin(s.camRot.y * DEG2RAD);
 	velocity.y -= 10 * DELTA;
 	velocity.z = axisForward * cos(s.camRot.y * DEG2RAD) + axisSideways * sin(s.camRot.y * DEG2RAD);
+
+	if (isOnGround && IsKeyDown(KEY_SPACE)) {
+		velocity.y = 20;
+	}
+
 
 	b3Body_SetLinearVelocity(mPlayerBody, velocity);
 	b3Body_SetAwake(mPlayerBody, true);
@@ -68,4 +76,7 @@ void Player::render() {
 
 void Player::gui() {
 	base::gui();
+
+	float3 velocity = b3ToFloat3(b3Body_GetLinearVelocity(mPlayerBody)) + float3(0, 10 * DELTA, 0);
+	UIM_F3_RO(velocity);
 }

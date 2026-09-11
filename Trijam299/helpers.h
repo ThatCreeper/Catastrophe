@@ -62,6 +62,10 @@ inline float Clamp(float x, int min, int max) {
 	return Clamp(x, (float)min, (float)max);
 }
 
+inline bool FloatRoughlyEquals(float a, float b, float epsilon = std::numeric_limits<float>::epsilon()) {
+	return std::abs(a - b) <= epsilon;
+}
+
 inline float Dist(float ax, float ay, float bx, float by) {
 	float xd = ax - bx;
 	float yd = ay - by;
@@ -129,6 +133,7 @@ inline float NonPeriodic( float seed, float ratea, float x )
 #define UIM_IX_RO( i ) ImGui::Text( #i " = 0x%x", i );
 #define UIM_F2_DRAG( v ) ImGui::DragFloat2( #v, &v.x, 0.1f );
 #define UIM_F3_DRAG( v ) ImGui::DragFloat3( #v, &v.x, 0.1f );
+#define UIM_F3_RO(v) { float3 vec = v; ImGui::Text(#v " = (%f, %f, %f)", vec.x, vec.y, vec.z); }
 
 struct float2
 {
